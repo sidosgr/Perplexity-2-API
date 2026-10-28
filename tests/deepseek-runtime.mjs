@@ -53,5 +53,11 @@ try{
   console.log('PASS: live tool call, isolated local QA file write/read, and actual tool-result continuation through published Harness LLM runtime');
  }
  if(!live){assert(requests.every(r=>r.init.headers['user-agent'].startsWith('deepseek-harness/')));assert.equal(requests.at(-1).init.headers['X-Perplexity-Session-Id'],'dsh-'+options.sessionId);}
+ if(!live){
+  let adapter,reads=0;
+  plugin.apply({get:(service)=>service==='credentials'?{resolve:async(ref)=>{assert.equal(ref,'SAVED_BRIDGE_REF');reads++;return {value:'lpb_saved-test-only'};}}:undefined,llm:{registerAdapter:(_routes,value)=>{adapter=value;}}},{apiKeyEnv:'SAVED_BRIDGE_REF'});
+  await adapter.listModels();assert(reads>0);assert.equal(requests.at(-1).init.headers.Authorization,'Bearer lpb_saved-test-only');
+  console.log('PASS: desktop saved credential reference resolves without an environment variable');
+ }
  console.log('PASS: actual published Cordis activation, LLM registration/model resolution, prepared stream, tool-result representation and '+(live?'live '+model+' text generation':'wire attribution/session headers'));
 }finally{await ctx.fiber.dispose();globalThis.fetch=oldFetch;if(oldKey===undefined)delete process.env.LOCAL_PERPLEXITY_KEY;else process.env.LOCAL_PERPLEXITY_KEY=oldKey;}

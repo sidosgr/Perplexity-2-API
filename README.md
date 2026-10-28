@@ -1,6 +1,6 @@
 # Local Perplexity Bridge
 
-Experimental Windows desktop app that serves a local text/tool API through your own signed-in Perplexity web session. Source version **0.3.4 plus pending response recovery**. Latest installed live tests used v0.3.4 with **perplexity-claude55sonnetthinking** on Pro. See [the HTML handbook](README.html), [account setup](docs/ACCOUNT-SETUP.md), [harness development](docs/HARNESS-DEVELOPMENT.md), and [model-specific test report](docs/TEST-REPORT-2026-10-28.md).
+Experimental Windows desktop app that serves a local text/tool API through your own signed-in Perplexity web session. Source version **0.4.0**. Latest installed live tests used v0.3.4 with **perplexity-claude55sonnetthinking** on Pro. See [the HTML handbook](README.html), [account setup](docs/ACCOUNT-SETUP.md), [harness development](docs/HARNESS-DEVELOPMENT.md), and [model-specific test report](docs/TEST-REPORT-2026-10-28.md).
 
 Sign in directly on `https://www.perplexity.ai/` inside the app. No Perplexity API key is needed for the web adapter. The official Perplexity API is a separate product with separate billing. This adapter uses undocumented web interfaces and can break when the website changes.
 

@@ -8,7 +8,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyName>PerplexityLocalBridge</AssemblyName>
-    <Version>0.3.4</Version>
+    <Version>0.4.0</Version>
+    <DefaultItemExcludes>$(DefaultItemExcludes);artifacts/**;.git/**</DefaultItemExcludes>
   </PropertyGroup>
   <ItemGroup>
     <Using Remove="System.Windows.Forms" />

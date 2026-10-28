@@ -5,7 +5,7 @@ Host provider plugin, version 0.1.0. Registers **perplexity-bridge** directly wi
 ## Install
 
 1. Keep Local Perplexity Bridge running, signed in and serving port 8082. Enable Translate harness tool calls and create a local client key.
-2. Set `LOCAL_PERPLEXITY_KEY` in the environment of the **Harness server process**, then restart that process. For a PowerShell launch, `$env:LOCAL_PERPLEXITY_KEY = '<your-local-key>'`. Avoid committing the key into plugin config. An installed server started elsewhere will not inherit a variable set later in an unrelated terminal.
+2. Configure a key reference: the plugin resolves `apiKeyEnv` through Harness's credential service first, then the server environment. Default is `LOCAL_PERPLEXITY_KEY`. If you already saved the bridge key through a custom provider's Models page, set `apiKeyEnv` to that provider's existing reference (for example `PERPLEXITY2API_API_KEY`) in the plugin row config. The plugin does not read or copy credential files. Alternatively set `LOCAL_PERPLEXITY_KEY` in the environment of the **Harness server process**, then restart that process. For PowerShell: `$env:LOCAL_PERPLEXITY_KEY = '<your-local-key>'`. Avoid committing the actual key into plugin config.
 3. In Harness **Plugin Manager**, install this repository's `integrations/deepseek-harness` directory as a local bundle. If your build exposes the `plugin_manager` tool, use its `install_bundle` action with the local directory, following that version's schema. Do not treat an npm package on disk as proof that the bundle is enabled.
 4. Enable the bundle/plugin and inspect its activation status. It must have access to the host's `llm` service and resolve `@deepseek-ai/dsh-llm`. Restart if the loader reports restart-required.
 5. Select provider **Local Perplexity Bridge** / ID **perplexity-bridge** and a model from the authenticated bridge catalogue. Latest bridge live tests used `perplexity-claude55sonnetthinking`; select that exact ID only when your account discovers it. `perplexity-web` uses the app default.
@@ -20,7 +20,7 @@ The bundle defaults are in cordis.patch.yml. Config fields accepted by the plugi
 | Field | Default | Meaning |
 | --- | --- | --- |
 | baseURL | http://127.0.0.1:8082/v1 | IPv4 loopback bridge URL; remote URLs, userinfo, queries and alternate paths refused |
-| apiKeyEnv | LOCAL_PERPLEXITY_KEY | Environment-variable reference, never the actual key |
+| apiKeyEnv | LOCAL_PERPLEXITY_KEY | Harness saved-credential reference, then environment fallback; never the actual key |
 | projectPath | server process working directory | Stable project identity; set an absolute workspace path for a dedicated project deployment |
 | timeoutMs | 180000 | Total HTTP timeout, 1000–1800000 ms; align with the app timeout |
 

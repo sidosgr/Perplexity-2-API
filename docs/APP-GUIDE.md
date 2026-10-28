@@ -2,7 +2,7 @@
 
 An experimental Windows application that serves a local API through an account signed in to Perplexity's website. WPF and WebView2 provide the desktop and isolated browser profiles; ASP.NET serves the loopback API. The harness supplies and executes local tools.
 
-Source version: **0.3.4 plus pending response recovery**. Latest installed live verification: **v0.3.4**, Pro account, **perplexity-claude55sonnetthinking**. A new build from this source includes changes not present in that installed test binary. Review the test evidence before making capability claims.
+Source version: **0.4.0**. Latest installed live verification: **v0.3.4**, Pro account, **perplexity-claude55sonnetthinking**. A new build from this source includes changes not present in that installed test binary. Review the test evidence before making capability claims.
 
 ## Install and first connection
 
@@ -77,7 +77,7 @@ Large contexts are transferred through native messages within a 39,000-character
 
 The model returns a structured envelope which the bridge translates into OpenAI tool calls. The harness executes them locally and supplies results. Website artifacts do not prove local file creation. Prompt compliance can fail; inspect tool events and actual files before accepting a completion claim.
 
-Pending recovery code can extract a single complete nonce-matching JSON envelope from surrounding prose and validate names, arguments, duplicate keys and supported schema constraints. For a completed invalid response, it permits one correction in the same mapped conversation and original timeout. This consumes an additional native request. It does not automatically rerun an ambiguous transport outcome or invent argument repairs. These changes have synthetic coverage; live recovery is not yet verified.
+Version 0.4.0 recovery code can extract a single complete nonce-matching JSON envelope from surrounding prose and validate names, arguments, duplicate keys and supported schema constraints. For a completed invalid response, it permits one correction in the same mapped conversation and original timeout. This consumes an additional native request. It does not automatically rerun an ambiguous transport outcome or invent argument repairs. These changes have synthetic coverage; live recovery is not yet verified.
 
 SSE is buffered until generation and validation finish. Token usage is null. max_tokens-style budgets are approximate prompt guidance, not enforceable output limits; begin with modest tasks and enough time for context transfer. Sampling parameters cannot be enforced. Unsupported explicit reasoning controls are rejected; choose a discovered thinking-model ID instead. Citation links are retained for ordinary prose and excluded from structured tool payloads. Web search follows the website behavior and is not guaranteed disabled.
 

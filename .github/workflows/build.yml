@@ -25,6 +25,7 @@ jobs:
       - run: node tests/web-transport.test.cjs
       - run: node tests/models.test.cjs
       - run: node tests/pi-extension.test.mjs
+      - run: node tests/opencode-extension.test.mjs
       - shell: pwsh
         run: ./scripts/Build-Release.ps1
       - uses: actions/upload-artifact@v4
@@ -34,3 +35,4 @@ jobs:
             artifacts/release/*/LocalPerplexityBridge-Windows-x64.zip
             artifacts/release/*/SHA256SUMS.txt
             artifacts/release/*/LocalPerplexityBridge-Setup-*-x64.exe
+

@@ -27,9 +27,10 @@
     <None Update="README.md" CopyToPublishDirectory="PreserveNewest" />
     <None Update="README.html" CopyToPublishDirectory="PreserveNewest" />
     <None Update="docs\**\*" CopyToPublishDirectory="PreserveNewest" />
-    <None Update="integrations\perplexity\SKILL.md" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="integrations\**\*" CopyToPublishDirectory="PreserveNewest" />
     <None Update="LICENSE" CopyToPublishDirectory="PreserveNewest" />
     <None Update="TESTING.md" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
+
 

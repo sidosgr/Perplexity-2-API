@@ -1,6 +1,6 @@
 # DeepSeek Harness · Local Perplexity Bridge
 
-Host provider plugin, version 0.1.0. Registers **perplexity-bridge** directly with `ctx.llm`; no remote relay, extra shell tool, or custom proxy process. Existing Harness tools and permission checks execute local actions.
+Host provider plugin, version 0.2.0. Registers **perplexity-bridge** directly with `ctx.llm`; no remote relay, extra shell tool, or custom proxy process. Existing Harness tools and permission checks execute local actions.
 
 ## Install
 
@@ -19,7 +19,7 @@ The bundle defaults are in cordis.patch.yml. Config fields accepted by the plugi
 
 | Field | Default | Meaning |
 | --- | --- | --- |
-| baseURL | http://127.0.0.1:8082/v1 | IPv4 loopback bridge URL; remote URLs, userinfo, queries and alternate paths refused |
+| baseURL | http://127.0.0.1:8082/v1 | Loopback or explicitly configured RFC1918 IPv4 bridge URL; public addresses, userinfo, queries and alternate paths refused |
 | apiKeyEnv | LOCAL_PERPLEXITY_KEY | Harness saved-credential reference, then environment fallback; never the actual key |
 | projectPath | server process working directory | Stable project identity; set an absolute workspace path for a dedicated project deployment |
 | timeoutMs | 180000 | Total HTTP timeout, 1000–1800000 ms; align with the app timeout |

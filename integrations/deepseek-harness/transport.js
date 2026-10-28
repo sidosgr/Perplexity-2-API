@@ -4,7 +4,7 @@ import {resolve,basename} from 'node:path';
 export function settings(config={},env=process.env){
  const url=new URL(config.baseURL??'http://127.0.0.1:8082/v1');
  // Match the bridge's IPv4 binding; no userinfo, query, fragment or alternate path.
- if(url.protocol!=='http:'||url.hostname!=='127.0.0.1'||url.username||url.password||url.search||url.hash||url.pathname.replace(/\/$/,'')!=='/v1')throw Error('Bridge baseURL must be http://127.0.0.1:<port>/v1');
+ if(url.protocol!=='http:'||!(url.hostname==='127.0.0.1'||/^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)/.test(url.hostname))||url.username||url.password||url.search||url.hash||url.pathname.replace(/\/$/,'')!=='/v1')throw Error('Bridge baseURL must be http://<loopback-or-private-IPv4>:<port>/v1');
  const ref=config.apiKeyEnv??'LOCAL_PERPLEXITY_KEY';
  const timeoutMs=config.timeoutMs??180000;
  if(!Number.isInteger(timeoutMs)||timeoutMs<1000||timeoutMs>1800000)throw Error('timeoutMs must be 1000–1800000');

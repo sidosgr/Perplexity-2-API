@@ -1,3 +1,7 @@
+function trustedHost(host) {
+ const b=host.split('.').map(Number);
+ return ['127.0.0.1','localhost','[::1]'].includes(host)||(b.length===4&&b.every(n=>Number.isInteger(n)&&n>=0&&n<=255)&&(b[0]===10||b[0]===172&&b[1]>=16&&b[1]<=31||b[0]===192&&b[1]===168));
+}
 import { createHash } from "node:crypto";
 import { basename, resolve, join } from "node:path";
 import { homedir } from "node:os";
@@ -5,7 +9,7 @@ import { readFileSync, writeFileSync, renameSync, copyFileSync, mkdirSync } from
 
 function localPerplexity(ctx) {
   if (ctx.model?.provider !== "perplexity-2-api") return false;
-  try { const url = new URL(ctx.model.baseUrl); return url.protocol === "http:" && ["127.0.0.1", "localhost", "[::1]"].includes(url.hostname); }
+  try { const url = new URL(ctx.model.baseUrl); return url.protocol === "http:" && trustedHost(url.hostname); }
   catch { return false; }
 }
 function identity(ctx) {
@@ -17,7 +21,7 @@ export async function refreshLocalModels(agentDir = join(homedir(), ".pi", "agen
   const provider = config.providers?.["perplexity-2-api"];
   if (!provider) throw new Error("Configure the perplexity-2-api provider first.");
   const url = new URL(provider.baseUrl);
-  if (url.protocol !== "http:" || !["127.0.0.1", "localhost", "[::1]"].includes(url.hostname)) throw new Error("Model refresh only connects to the local bridge.");
+  if (url.protocol !== "http:" || !trustedHost(url.hostname)) throw new Error("Model refresh only connects to the configured loopback/private LAN bridge.");
   let key = provider.apiKey;
   if (typeof key === "string" && process.env[key]) key = process.env[key];
   if (typeof key !== "string" || !/^(lpb_|lcb_)/.test(key)) {

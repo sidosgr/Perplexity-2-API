@@ -53,8 +53,13 @@
 </StackPanel></Grid></Border></TabItem>
 <TabItem Header="API"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>     <Border Background="{DynamicResource PanelBrush}" CornerRadius="10" Padding="16" Margin="0,12,0,0"><StackPanel>
       <TextBlock Text="Local API" FontSize="18" FontWeight="SemiBold"/>
-      <TextBlock Text="Port  ⓘ" Margin="0,10,0,4" ToolTip="TCP port for http://127.0.0.1. Recommended: 8082. Range: 1024–65535. Connections are accepted from this PC only."/>
+      <TextBlock Text="Port  ⓘ" Margin="0,10,0,4" ToolTip="TCP port for http://127.0.0.1. Recommended: 8082. Range: 1024–65535. LAN access is optional."/>
       <TextBox x:Name="PortBox" Padding="7"/>
+      <CheckBox x:Name="LanModeBox" Content="Enable LAN access (API key required)" Margin="0,8,0,4"/>
+      <TextBlock Text="PC LAN IPv4 address (select an assigned address)"/>
+      <ComboBox x:Name="LanAddressBox" Margin="0,4,0,4"/>
+      <TextBox x:Name="LanUrlBox" IsReadOnly="True" Padding="7" ToolTip="LAN URL. HTTP traffic is unencrypted; use a trusted network."/>
+      <TextBlock Text="Save all settings to apply. Allow this app through Windows Firewall on Private networks if prompted." TextWrapping="Wrap" FontSize="11" Margin="0,4,0,0"/>
       <CheckBox x:Name="OpenAiBox" Content="OpenAI-compatible endpoint  ⓘ" Margin="0,12,0,4" ToolTip="Adds /v1/chat/completions. Recommended: enabled for OpenAI SDK clients. Text only; SSE output is buffered until generation finishes."/>
       <CheckBox x:Name="RequireKeyBox" Content="Require a local API key  ⓘ" Margin="0,10,0,4" ToolTip="Recommended: enabled. Turn off to use the endpoint without a key. While disabled, apps on this PC can use the endpoint. It remains bound to 127.0.0.1 and browser-origin requests stay blocked. Use Save all settings to apply."/>
       <CheckBox x:Name="ToolCallingBox" Content="Translate harness tool calls  ⓘ" Margin="0,8,0,4" ToolTip="Recommended: enabled for Pi and OpenCode. Tool definitions and results are sent as structured prompt context. Valid tool calls are returned to the harness for execution. This is prompt-based translation, not native website tool execution."/>
@@ -62,13 +67,13 @@
       <TextBox x:Name="TimeoutBox" Padding="7"/>
       <WrapPanel Margin="0,12,0,0"><Button x:Name="StartButton" Content="Start endpoint" Click="Start_Click"/><Button Content="Stop" Click="Stop_Click"/></WrapPanel>
      </StackPanel></Border><Grid Grid.Column="2">     <Border Background="{DynamicResource PanelBrush}" CornerRadius="10" Padding="16" Margin="0,12,0,0"><StackPanel>
-      <TextBlock Text="Local API keys  ⓘ" FontSize="18" FontWeight="SemiBold" ToolTip="Keys protect the local endpoint. They are not Perplexity credentials. Recommended: a separate key per client. Only hashes are saved."/>
+      <TextBlock Text="Local API keys  ⓘ" FontSize="18" FontWeight="SemiBold" ToolTip="Keys protect the local endpoint. They are not Perplexity credentials. Recommended: a separate key per client. New keys are also encrypted with Windows DPAPI for repeat copying."/>
       <TextBox x:Name="KeyNameBox" Text="My local client" Padding="7" Margin="0,10,0,8" ToolTip="A friendly label for this key. Recommended: the client application name."/>
       <WrapPanel><Button Content="Create key" Click="CreateKey_Click"/><Button Content="Revoke selected" Click="RevokeKey_Click"/></WrapPanel>
       <ListBox x:Name="KeysBox" DisplayMemberPath="Label" Height="75" Margin="0,10,0,8"/>
-      <TextBlock Text="New key (shown once)"/>
+      <TextBlock Text="Selected key (copy again any time)"/>
       <TextBox x:Name="NewKeyBox" IsReadOnly="True" Padding="7" Margin="0,4,0,8"/>
-      <Button Content="Copy new key" Click="CopyKey_Click" HorizontalAlignment="Left"/>
+      <Button Content="Copy selected key" Click="CopyKey_Click" HorizontalAlignment="Left"/>
      </StackPanel></Border></Grid></Grid></TabItem>
 <TabItem Header="Models"><Border Background="{DynamicResource PanelBrush}" CornerRadius="10" Padding="16"><StackPanel><TextBlock Text="Models" FontSize="18" FontWeight="SemiBold"/>      <TextBlock Text="Perplexity web model  ⓘ" Margin="0,8,0,4" ToolTip="Choose a discovered model. perplexity-auto uses the website automatic model; perplexity-web uses your configured default."/>
       <TextBox x:Name="ModelBox" Padding="7"/>

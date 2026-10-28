@@ -22,3 +22,5 @@ await jsonRequest(cfg,'/models',{headers:{Authorization:'Bearer test'}},async(ur
 assert.equal(wire.init.redirect,'error');assert(wire.init.signal);assert.equal(wire.url,'http://127.0.0.1:8082/v1/models');
 await assert.rejects(jsonRequest(cfg,'/models',{},async()=>new Response('private provider text',{status:401})),e=>e.status===401&&!e.message.includes('private'));
 console.log('PASS: DeepSeek plugin identity, provider isolation, Unicode tool/result translation, null usage, malformed output, auth errors and cancellation signal');
+
+assert.equal(settings({baseURL:'http://192.168.1.20:8082/v1'}).baseURL,'http://192.168.1.20:8082/v1');

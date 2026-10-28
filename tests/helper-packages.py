@@ -9,7 +9,7 @@ for line in (folder/'SHA256SUMS.txt').read_text().splitlines():
 with tempfile.TemporaryDirectory(prefix='perplexity-helper-test-') as temp:
  for harness in ['pi','opencode']:
   source=Path(temp)/harness;source.mkdir()
-  with zipfile.ZipFile(folder/f'LocalPerplexityBridge-{harness}-helper-0.4.0.zip') as z:
+  with zipfile.ZipFile(folder/f'LocalPerplexityBridge-{harness}-helper-0.5.0.zip') as z:
    assert z.testzip() is None;z.extractall(source)
   config=json.loads((source/'provider-example.json').read_text())
   assert 'perplexity-2-api' in config.get('providers',config.get('provider',{}))

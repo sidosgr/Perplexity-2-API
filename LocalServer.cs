@@ -21,11 +21,13 @@ public sealed class LocalServer(BridgeState state, Func<string,string,int,Cancel
     {
         if(app is not null)return;
         var settings=state.Settings;
+        BridgeState.Validate(settings);
         var builder=WebApplication.CreateSlimBuilder(new WebApplicationOptions{Args=[],EnvironmentName="Production"});
         builder.Logging.ClearProviders();
         builder.WebHost.ConfigureKestrel(options=>
         {
             options.Listen(IPAddress.Loopback,settings.Port);
+            if(settings.LanMode)options.Listen(IPAddress.Parse(settings.LanAddress!),settings.Port);
             options.Limits.MaxRequestBodySize=1024*1024;
             options.Limits.RequestHeadersTimeout=TimeSpan.FromSeconds(15);
         });
@@ -34,9 +36,9 @@ public sealed class LocalServer(BridgeState state, Func<string,string,int,Cancel
         {
             context.Response.Headers["Cache-Control"]="no-store";
             context.Response.Headers["X-Content-Type-Options"]="nosniff";
-            if(context.Connection.RemoteIpAddress is null || !IPAddress.IsLoopback(context.Connection.RemoteIpAddress) || context.Request.Host.Host is not ("127.0.0.1" or "localhost") || context.Request.Headers.ContainsKey("Origin"))
-            {await Error(context,403,"local_clients_only","This endpoint accepts local non-browser clients only.");return;}
-            if(context.Request.Path=="/health"){await next(context);return;}
+            if(!NetworkAccess.Allowed(context.Connection.RemoteIpAddress,context.Request.Host.Host,context.Request.Headers.ContainsKey("Origin"),settings))
+            {await Error(context,403,"client_not_allowed","Use the configured endpoint from an allowed non-browser client.");return;}
+            if(context.Request.Path=="/health" && System.Net.IPAddress.IsLoopback(context.Connection.RemoteIpAddress!)){await next(context);return;}
             if(settings.RequireApiKey)
             {
                 string? key=null;

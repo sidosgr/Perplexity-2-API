@@ -1,6 +1,6 @@
 {
   "name": "dsh-perplexity-bridge",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Local Perplexity Bridge provider with persistent DeepSeek Harness session routing",
   "type": "module",
   "license": "MIT",

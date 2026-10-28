@@ -1,6 +1,6 @@
 # Local Perplexity Bridge
 
-Experimental Windows desktop app that serves a local text/tool API through your own signed-in Perplexity web session. Source version **0.4.0**. Latest installed live tests used v0.3.4 with **perplexity-claude55sonnetthinking** on Pro. See [the HTML handbook](README.html), [account setup](docs/ACCOUNT-SETUP.md), [harness development](docs/HARNESS-DEVELOPMENT.md), and [model-specific test report](docs/TEST-REPORT-2026-10-28.md).
+Experimental Windows desktop app that serves a local text/tool API through your own signed-in Perplexity web session. Source version **0.5.0**. Latest installed live tests used v0.3.4 with **perplexity-claude55sonnetthinking** on Pro. See [the HTML handbook](README.html), [account setup](docs/ACCOUNT-SETUP.md), [harness development](docs/HARNESS-DEVELOPMENT.md), and [model-specific test report](docs/TEST-REPORT-2026-10-28.md).
 
 Sign in directly on `https://www.perplexity.ai/` inside the app. No Perplexity API key is needed for the web adapter. The official Perplexity API is a separate product with separate billing. This adapter uses undocumented web interfaces and can break when the website changes.
 
@@ -180,3 +180,13 @@ Protocol references: [Perplexity official SDK](https://github.com/perplexityai/p
 Independent experimental project, not affiliated with Perplexity, Anthropic, OpenAI, or OpenCode. A working technical test does not establish provider support or authorization.
 
 
+
+## LAN mode and repeat-copy keys (0.5.0)
+
+In API, enable **LAN access**, choose the PC's assigned private IPv4 address, and click Save all settings. The address and full LAN URL are shown below the selector. Local 127.0.0.1 access remains available. LAN requires key authentication and accepts private IPv4 clients only, with exact Host matching and browser Origin requests blocked. A network change can require selecting a new address and saving again. HTTP traffic is unencrypted: use only a trusted LAN, or an encrypted tunnel. Do not forward this port on your router.
+
+If Windows Firewall blocks another device, allow the app on Private networks. An administrator can create a scoped rule with `New-NetFirewallRule -DisplayName 'Local Perplexity Bridge LAN' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8082 -Profile Private -RemoteAddress LocalSubnet`. Adjust the port if changed. The app does not silently alter firewall settings.
+
+Use the displayed LAN base URL on the remote harness and install updated helpers. Pi/OpenCode accept a configured RFC1918 private endpoint; DeepSeek's baseURL can name the PC's private IPv4 address. Keep real session tracking enabled. Tools execute on the computer running the harness. One generation runs at a time across clients.
+
+New keys retain their authentication hash and a Windows-user DPAPI-encrypted copy. Select an active key and click **Copy selected key** any number of times, including after restarting the app. Older hash-only keys cannot be recovered: create a replacement, update clients, then revoke the older key. Clipboard access is explicit; secrets are not logged. Moving the settings to another Windows account does not make encrypted keys portable.

@@ -193,3 +193,35 @@ Console.WriteLine($"PASS: {count} total assertions including encrypted conversat
 PromptPlannerTests.Run(Check);
 Console.WriteLine($"PASS: {count} total assertions including bounded context transfers and incremental history.");
 await RepairTests.Run(Check); Console.WriteLine($"PASS: {count} total assertions including bounded response recovery.");
+
+{
+ var folderLanQa=Path.Combine(Path.GetTempPath(),"lan-keyLanQa-qa-"+Guid.NewGuid());Directory.CreateDirectory(folderLanQa);
+ try{
+ var pathLanQa=Path.Combine(folderLanQa,"settingsLanQa.json");var storeLanQa=new BridgeState(pathLanQa);var createdLanQa=storeLanQa.CreateKey("Repeat copy");
+ Check(storeLanQa.CopyableSecret(createdLanQa.Key.Id)==createdLanQa.Secret,"New keyLanQa must be copyable");
+ var restoredLanQa=new BridgeState(pathLanQa);Check(restoredLanQa.CopyableSecret(createdLanQa.Key.Id)==createdLanQa.Secret,"Key must remain copyable after restart");
+ Check(!File.ReadAllText(pathLanQa).Contains(createdLanQa.Secret),"Saved keyLanQa must not be plaintext");
+ restoredLanQa.Revoke(createdLanQa.Key.Id);Check(!restoredLanQa.Authenticate(createdLanQa.Secret),"Revoked keyLanQa must fail authentication");
+ try{restoredLanQa.CopyableSecret(createdLanQa.Key.Id);Check(false,"Revoked keyLanQa must not be copyable");}catch(ArgumentException){Check(true,"Revoked keyLanQa copy rejected");}
+ var settingsLanQa=new BridgeSettings(LanMode:true,LanAddress:"192.168.1.20");
+ Check(NetworkAccess.Allowed(System.Net.IPAddress.Parse("192.168.1.2"),"192.168.1.20",false,settingsLanQa),"LAN client on configured host accepted");
+ Check(!NetworkAccess.Allowed(System.Net.IPAddress.Parse("8.8.8.8"),"192.168.1.20",false,settingsLanQa),"Public remote rejected");
+ Check(!NetworkAccess.Allowed(System.Net.IPAddress.Parse("192.168.1.2"),"evil.example",false,settingsLanQa),"Wrong Host rejected");
+ Check(!NetworkAccess.Allowed(System.Net.IPAddress.Parse("192.168.1.2"),"192.168.1.20",true,settingsLanQa),"Browser Origin rejected");
+ Check(!NetworkAccess.Allowed(System.Net.IPAddress.Parse("192.168.1.2"),"192.168.1.20",false,new()),"LAN disabled blocks remote");
+ try{BridgeState.Validate(settingsLanQa with{RequireApiKey=false});Check(false,"LAN no-keyLanQa forbidden");}catch(ArgumentException){Check(true,"LAN no-keyLanQa rejected");}
+ var ips=NetworkAccess.Addresses();
+ if(ips.Length>0){
+ var listenerLanQa=new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback,0);listenerLanQa.Start();var portLanQa=((System.Net.IPEndPoint)listenerLanQa.LocalEndpoint).Port;listenerLanQa.Stop();
+ storeLanQa.Update(new BridgeSettings(Port:portLanQa,LanMode:true,LanAddress:ips[0]));var keyLanQa=storeLanQa.CreateKey("LAN test");
+ await using var serverLanQa=new LocalServer(storeLanQa,(_,m,_,_)=>Task.FromResult(new Completion("OK",m)));await serverLanQa.StartAsync();
+ using var httpLanQa=new HttpClient(new HttpClientHandler{UseProxy=false});
+ var uriLanQa=$"http://{ips[0]}:{portLanQa}";
+ Check((await httpLanQa.GetAsync(uriLanQa+"/health")).StatusCode==System.Net.HttpStatusCode.Unauthorized,"LAN health requires keyLanQa");
+ httpLanQa.DefaultRequestHeaders.Authorization=new("Bearer",keyLanQa.Secret);
+ Check((await httpLanQa.GetAsync(uriLanQa+"/health")).IsSuccessStatusCode,"Bound LAN interface accepts authenticated request");
+ storeLanQa.Revoke(keyLanQa.Key.Id);Check((await httpLanQa.GetAsync(uriLanQa+"/v1/models")).StatusCode==System.Net.HttpStatusCode.Unauthorized,"Revocation applies immediately on LAN");
+ }
+ }finally{Directory.Delete(folderLanQa,true);}
+}
+Console.WriteLine($"PASS: {count} total assertions including LAN binding/policy and encrypted repeat-copy keys.");

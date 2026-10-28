@@ -8,7 +8,8 @@ public partial class MainWindow
     private void InitializeSettingsFeedback()
     {
         foreach(var field in new[]{PortBox,TimeoutBox,ModelBox,ProfileCooldownBox})field.TextChanged+=(_,_)=>MarkSettingsDirty();
-        foreach(var box in new[]{OpenAiBox,RequireKeyBox,ToolCallingBox,ProfileFailoverBox})box.Click+=(_,_)=>MarkSettingsDirty();
+        LanAddressBox.SelectionChanged+=(_,_)=>MarkSettingsDirty();
+        foreach(var box in new[]{OpenAiBox,RequireKeyBox,ToolCallingBox,ProfileFailoverBox,LanModeBox})box.Click+=(_,_)=>MarkSettingsDirty();
     }
     private void MarkSettingsDirty()
     {

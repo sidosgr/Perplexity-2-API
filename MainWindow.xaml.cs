@@ -53,6 +53,14 @@ public partial class MainWindow : Window
             InitializeUpdates();
             DarkModeBox.IsChecked = state.Settings.DarkMode;
             RequireKeyBox.IsChecked = state.Settings.RequireApiKey;
+            LanModeBox.IsChecked=state.Settings.LanMode;
+            LanAddressBox.ItemsSource=NetworkAccess.Addresses();
+            LanAddressBox.SelectedItem=state.Settings.LanAddress??NetworkAccess.Addresses().FirstOrDefault();
+            LanAddressBox.SelectionChanged+=(_,_)=>UpdateLanUrl();
+            PortBox.TextChanged+=(_,_)=>UpdateLanUrl();
+            LanModeBox.Click+=(_,_)=>{if(LanModeBox.IsChecked==true)RequireKeyBox.IsChecked=true;UpdateLanUrl();};
+            KeysBox.SelectionChanged+=(_,_)=>NewKeyBox.Clear();
+            UpdateLanUrl();
             ToolCallingBox.IsChecked = state.Settings.ToolCalling;
             AutoStartBox.IsChecked = state.Settings.AutoStartEndpoint;
             ShowBrowserBox.IsChecked = state.Settings.ShowBrowser;
@@ -158,7 +166,7 @@ public partial class MainWindow : Window
     private BridgeSettings ReadSettings()
     {
         if (!int.TryParse(PortBox.Text, out var port) || !int.TryParse(TimeoutBox.Text, out var timeout)) throw new ArgumentException("Port and timeout must be whole numbers.");
-        var settings = state.Settings with { Port=port, OpenAi=OpenAiBox.IsChecked==true, Model=BridgeState.NormalizeModel(ModelBox.Text), TimeoutSeconds=timeout, RequireApiKey=RequireKeyBox.IsChecked==true, DarkMode=DarkModeBox.IsChecked==true, ToolCalling=ToolCallingBox.IsChecked==true, CheckUpdatesOnStartup=AutoUpdateBox.IsChecked==true, AutoStartEndpoint=AutoStartBox.IsChecked==true };
+        var settings = state.Settings with { Port=port, LanMode=LanModeBox.IsChecked==true, LanAddress=LanAddressBox.SelectedItem as string, OpenAi=OpenAiBox.IsChecked==true, Model=BridgeState.NormalizeModel(ModelBox.Text), TimeoutSeconds=timeout, RequireApiKey=RequireKeyBox.IsChecked==true, DarkMode=DarkModeBox.IsChecked==true, ToolCalling=ToolCallingBox.IsChecked==true, CheckUpdatesOnStartup=AutoUpdateBox.IsChecked==true, AutoStartEndpoint=AutoStartBox.IsChecked==true };
         if(!int.TryParse(ProfileCooldownBox.Text,out var cooldown))throw new ArgumentException("Profile cooldown must be a whole number of minutes.");
         settings=settings with{ThinkingLevel=ThinkingPicker.SelectedValue as string??state.Settings.ThinkingLevel,ShowBrowser=ShowBrowserBox.IsChecked==true,AutomaticProfileFailover=ProfileFailoverBox.IsChecked==true,ProfileCooldownMinutes=cooldown};
         BridgeState.Validate(settings); return settings;
@@ -204,7 +212,7 @@ public partial class MainWindow : Window
     private async void CreateKey_Click(object sender, RoutedEventArgs e) => await Guard(() =>
     {
         var created = state.CreateKey(KeyNameBox.Text); NewKeyBox.Text = created.Secret;
-        RefreshKeys(); Log("keys", "Local API key created. Copy it now; only its hash is saved."); return Task.CompletedTask;
+        RefreshKeys(); KeysBox.SelectedItem=created.Key; NewKeyBox.Text=created.Secret; Log("keys", "Local API key created and encrypted for repeat copying."); return Task.CompletedTask;
     });
     private async void RevokeKey_Click(object sender, RoutedEventArgs e) => await Guard(() =>
     {
@@ -213,9 +221,16 @@ public partial class MainWindow : Window
     });
     private void CopyKey_Click(object sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrEmpty(NewKeyBox.Text)) return;
-        try { Clipboard.SetText(NewKeyBox.Text); Log("keys", "New local key copied to the clipboard."); }
-        catch (Exception) { Log("keys", "Clipboard is unavailable. Select and copy the displayed key manually."); }
+        try {
+            if(KeysBox.SelectedItem is not LocalKey key)throw new ArgumentException("Select a key to copy.");
+            var secret=state.CopyableSecret(key.Id);NewKeyBox.Text=secret;Clipboard.SetText(secret);
+            Log("keys","Selected API key copied to clipboard.");
+        }catch(Exception ex){Log("keys",ex is ArgumentException?ex.Message:"Key decryption or clipboard unavailable on this Windows account.");}
+    }
+    private void UpdateLanUrl()
+    {
+        if(LanUrlBox is null)return;
+        LanUrlBox.Text=LanAddressBox.SelectedItem is string ip?$"http://{ip}:{PortBox.Text}/v1":"No private IPv4 address detected";
     }
     private async void Test_Click(object sender, RoutedEventArgs e) => await Guard(RunQuickTest);
     private async Task RunQuickTest()

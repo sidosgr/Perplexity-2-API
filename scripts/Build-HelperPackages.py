@@ -6,14 +6,14 @@ ROOT=Path(__file__).resolve().parent.parent
 parser=argparse.ArgumentParser()
 parser.add_argument('--output-dir',type=Path)
 args=parser.parse_args()
-version='0.4.0'
+version='0.5.0'
 output=(args.output_dir or ROOT/'artifacts/helper-packages'/version).resolve()
 output.mkdir(parents=True,exist_ok=True)
 installer=(ROOT/'scripts/helper-installer.mjs').read_bytes()
 license=(ROOT/'LICENSE').read_bytes()
 
 guides={
-'pi':'''# Pi helper · package 0.4.0
+'pi':'''# Pi helper · package 0.5.0
 
 Extract the entire ZIP, then double-click Install.cmd (Node.js must be installed),
 or run `node Install.mjs` from a terminal. The installer copies the helper into
@@ -38,7 +38,7 @@ restore the .backup file if replacing an earlier helper was unintended.
 Tested helper lifecycle: Pi CLI 1.4.0. Latest live provider model:
 perplexity-claude55sonnetthinking, Pro; availability depends on account discovery.
 ''',
-'opencode':'''# OpenCode helper · package 0.4.0
+'opencode':'''# OpenCode helper · package 0.5.0
 
 Extract the entire ZIP, then double-click Install.cmd (Node.js required),
 or run `node Install.mjs`. The installer copies the plugin into

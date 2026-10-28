@@ -1,0 +1,20 @@
+const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const {webcrypto}=require('node:crypto');const source=fs.readFileSync(require.resolve('../WebBridge.js'),'utf8');
+const requests=[];let responder=async path=>path==='/api/auth/session'?Response.json({user:{id:'test-user',email:'private@example.test',subscription_tier:'pro'},accessToken:'never-export-me'}):path.startsWith('/rest/models/config')?Response.json({models:{fixture:{label:'Fixture model',mode:'search'}},config:[{subscription_tier:'pro',non_reasoning_model:'fixture'}],default_models:{search:'pplx_pro'}}):new Response('data: {"blocks":[{"intended_usage":"ask_text_0_markdown","markdown_block":{"answer":"OK"}}],"final_sse_message":true}\n\n',{headers:{'content-type':'text/event-stream'}});
+const context=vm.createContext({location:{origin:'https://www.perplexity.ai'},document:{querySelectorAll:()=>[]},navigator:{language:'en-US'},crypto:webcrypto,TextEncoder,TextDecoder,Intl,fetch:async(path,options)=>{requests.push({path,options});return responder(path);}});vm.runInContext(source,context);
+(async()=>{
+ const sessions=await context.localPerplexityBridgeRun({operation:'session'});assert.equal(sessions.length,1);assert.match(sessions[0].id,/^[a-f0-9-]{36}$/);assert(!JSON.stringify(sessions).includes('private'));assert(!JSON.stringify(sessions).includes('never-export'));
+ const input={operation:'complete',model:'perplexity-auto',prompt:'Quotes " backticks ` Ελληνικά'};
+ const countBeforeOversize=requests.length;await assert.rejects(()=>context.localPerplexityBridgeRun({...input,prompt:'x'.repeat(39001)}),/prompt_too_large/);assert.equal(requests.length,countBeforeOversize);
+ const result=await context.localPerplexityBridgeRun(input);assert.equal(result.text,'OK');const req=requests.at(-1);assert.equal(req.path,'/rest/sse/perplexity_ask');assert.equal(req.options.credentials,'same-origin');assert.equal(req.options.redirect,'error');const payload=JSON.parse(req.options.body);assert.equal(payload.query_str,input.prompt);assert.equal(payload.params.model_preference,'pplx_pro');assert(!Object.keys(req.options.headers).some(k=>/cookie|authorization|user-agent/i.test(k)));
+ await context.localPerplexityBridgeRun(input);assert.notEqual(JSON.parse(requests.at(-1).options.body).params.frontend_context_uuid,payload.params.frontend_context_uuid);
+ await assert.rejects(()=>context.localPerplexityBridgeRun({...input,model:'perplexity-locked'}),/model_restriction/);
+ context.location.origin='https://evil.example';await assert.rejects(()=>context.localPerplexityBridgeRun(input),/wrong_origin/);context.location.origin='https://www.perplexity.ai';
+ context.localPerplexityModelCache=null;responder=async()=>Response.json({});await assert.rejects(()=>context.localPerplexityBridgeRun({operation:'session'}),/http_401/);
+ context.localPerplexityModelCache={time:Date.now(),account:'test-user',tier:'pro',models:[{id:'perplexity-auto'}],automatic:'pplx_pro'};responder=async()=>new Response('<html>verification</html>',{status:403,headers:{'content-type':'text/html'}});await assert.rejects(()=>context.localPerplexityBridgeRun(input),/http_403\|html_response/);
+ responder=async()=>Response.json({error:{type:'quota_exceeded'}},{status:429});await assert.rejects(()=>context.localPerplexityBridgeRun(input),/usage_limited/);
+ responder=async()=>Response.json({error:{type:'quota_exceeded'}},{status:429,headers:{'Retry-After':'420'}});
+ await assert.rejects(()=>context.localPerplexityBridgeRun(input),e=>e.message==='usage_limited'&&e.retryAfterSeconds===420);
+ responder=async()=>new Response('data: {"answer":"partial"}\n\n',{headers:{'content-type':'text/event-stream'}});await assert.rejects(()=>context.localPerplexityBridgeRun(input),/incomplete_stream/);
+ vm.runInContext(source,context);assert.equal(typeof context.localPerplexityBridgeRun,'function');console.log('PASS: same-origin transport, credential redaction, fresh threads, unavailable models, sessions, verification, limits, truncation and reinjection');
+})().catch(e=>{console.error(e);process.exitCode=1;});

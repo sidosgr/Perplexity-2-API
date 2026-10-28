@@ -1,0 +1,16 @@
+bin/
+obj/
+artifacts/
+.vs/
+*.user
+*.tokens.json
+credentials/
+
+*.dpapi
+*.log
+.env
+.env.*
+!*.example
+node_modules/
+playwright-report/
+

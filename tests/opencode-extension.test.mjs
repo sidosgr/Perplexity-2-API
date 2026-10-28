@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {PerplexitySessions} from '../integrations/opencode/perplexity-sessions.mjs';
+const hook=(await PerplexitySessions({directory:process.cwd()}))['chat.headers'];
+const input={sessionID:'a',model:{providerID:'perplexity-2-api'},provider:{options:{baseURL:'http://127.0.0.1:8082/v1'}}};
+const a={headers:{}},b={headers:{}},c={headers:{}};
+await hook(input,a);await hook(input,b);assert.deepEqual(a,b);
+await hook({...input,sessionID:'b'},c);assert.notEqual(a.headers['X-Perplexity-Session-Id'],c.headers['X-Perplexity-Session-Id']);
+const other={headers:{}};await hook({...input,model:{providerID:'other'}},other);assert.deepEqual(other.headers,{});
+await assert.rejects(()=>hook({...input,sessionID:''},{headers:{}}));
+console.log('PASS: OpenCode stable sessions, new-session isolation, provider scoping and missing-session guard');

@@ -1,0 +1,209 @@
+<!doctype html><html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Local Perplexity Bridge · Handbook</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1017;--panel:#121b26;--text:#e4edf7;--muted:#9eafc3;--line:#293647;--accent:#63dec9;--code:#080e15}html[data-theme=light]{color-scheme:light;--bg:#f2f6fa;--panel:#fff;--text:#172638;--muted:#526579;--line:#ccdae5;--accent:#087b70;--code:#eaf0f6}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:30px}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.75 system-ui,-apple-system,Segoe UI,sans-serif}a{color:var(--accent);text-underline-offset:4px}aside{position:fixed;inset:0 auto 0 0;width:260px;border-right:1px solid var(--line);padding:36px 25px;background:var(--panel)}.brand{font-size:20px;font-weight:750;line-height:1.4}.small{color:var(--muted);font-size:13px}nav{display:grid;gap:12px;margin-top:45px}nav a{color:var(--text);text-decoration:none;padding:10px;border-radius:8px}nav a:hover{background:var(--bg)}nav span{color:var(--accent);margin-right:14px;font-size:12px}main{max-width:1190px;margin-left:260px;padding:55px 65px 100px}.hero{padding:30px 0 55px;border-bottom:1px solid var(--line)}.eyebrow{color:var(--accent);text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:750}h1{font-size:clamp(38px,5vw,66px);line-height:1.08;letter-spacing:-2px;margin:22px 0}h2{font-size:32px;line-height:1.3}h3{font-size:23px;margin-top:35px}h4{font-size:19px}.lead{font-size:20px;color:var(--muted);max-width:660px}.badge{display:inline-block;padding:5px 12px;border:1px solid var(--line);border-radius:30px;margin:10px 5px 0 0;font-size:12px}section{padding:55px 0;border-bottom:1px solid var(--line)}p,li{max-width:850px}code{font:0.88em/1.7 Consolas,monospace;background:var(--code);padding:3px 6px;border-radius:5px;overflow-wrap:anywhere}pre{overflow:auto;padding:23px;margin:0}pre code{padding:0;overflow-wrap:normal}.code{background:var(--code);border:1px solid var(--line);border-radius:12px;position:relative;margin:24px 0}.copy{position:absolute;right:8px;top:8px;font-size:11px}button{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:7px;padding:8px 12px;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:4px}#theme{margin-top:30px}.table{overflow:auto;margin:25px 0}table{border-collapse:collapse;width:100%;font-size:14px}td{border-bottom:1px solid var(--line);padding:14px 16px;vertical-align:top}tr:first-child{font-weight:700;background:var(--panel)}blockquote{border-left:3px solid var(--accent);padding:10px 20px;margin:12px 0;background:var(--panel);color:var(--muted)}footer{padding-top:35px;color:var(--muted);font-size:13px}@media(max-width:850px){aside{position:static;width:auto;border-right:0;border-bottom:1px solid var(--line);padding:24px}nav{display:flex;flex-wrap:wrap;margin-top:20px;gap:3px}main{margin:0;padding:25px}#theme{margin-top:10px}.hero{padding-top:10px}h1{letter-spacing:-1px}}@media print{aside,.copy{display:none}main{margin:0;padding:0}body{background:white;color:black}section{break-inside:auto}a{color:#146b64}pre{white-space:pre-wrap}html{color-scheme:light}}
+</style></head><body><aside><div class="brand">Local Perplexity<br>Bridge <span style="color:var(--accent)">↗</span></div><p class="small">The Windows bridge handbook<br>Source 0.3.4 + pending recovery</p><nav><a href="#overview"><span>01</span>Start here</a><a href="#accounts"><span>02</span>Account setup</a><a href="#harnesses"><span>03</span>Harness development</a><a href="#tests"><span>04</span>Test evidence</a></nav><button id="theme" type="button">Switch to light</button><p class="small">Offline · No external fonts<br>No analytics · 28 Oct 2026</p></aside><main><header class="hero"><div class="eyebrow">Your account. Your local workflow.</div><h1>A clear path from<br>chat to local tools.</h1><p class="lead">Configure accounts, connect your coding agent, understand session routing, and verify what actually ran on your computer.</p><span class="badge">Windows x64</span><span class="badge">OpenAI-compatible</span><span class="badge">Experimental web adapter</span></header><section id="overview"><div class="eyebrow">01 / Start here</div><h2>Local Perplexity Bridge</h2>
+<p>An experimental Windows application that serves a local API through an account signed in to Perplexity&#x27;s website. WPF and WebView2 provide the desktop and isolated browser profiles; ASP.NET serves the loopback API. The harness supplies and executes local tools.</p>
+<p>Source version: <strong>0.3.4 plus pending response recovery</strong>. Latest installed live verification: <strong>v0.3.4</strong>, Pro account, <strong>perplexity-claude55sonnetthinking</strong>. A new build from this source includes changes not present in that installed test binary. Review the test evidence before making capability claims.</p>
+<h3>Install and first connection</h3>
+<ul>
+<li>Use a trusted locally built Windows x64 installer, or extract the portable ZIP into a writable folder. The release script produces a self-contained .NET application; the WebView2 Runtime is still required. No GitHub binary release is implied by a source-code push.</li>
+<li>Launch PerplexityLocalBridge.exe. Read the version badge and window title. Add a named account and complete website sign-in and any verification in the embedded browser.</li>
+<li>Apply the account baseline in the Account setup section. Check the account, refresh models, and choose the API account/default model.</li>
+<li>In API, leave OpenAI compatibility, Require a local API key, and Translate harness tool calls enabled. Default port is <strong>8082</strong>. Create a named client key and copy it immediately: it is shown once. Save all settings.</li>
+<li>Click <strong>Connect Perplexity + start API</strong>. Configure the harness with base URL <code>http://127.0.0.1:8082/v1</code>, local key, a discovered model, and a session-tracking extension.</li>
+<li>Test a small prompt, then a real local write/read/edit cycle. Check actual tool output and the Sessions tab. A green process health response alone does not prove generation readiness.</li>
+</ul>
+<p>Official Perplexity API keys and web subscriptions are separate products. This bridge has no separately billed API fallback and makes no claim of provider-supported subscription API access.</p>
+<h3>Every app tab</h3>
+<div class="table"><table><tbody>
+<tr><td>Tab</td><td>What to do</td></tr>
+<tr><td>Accounts</td><td>Add, name, reorder, enable, check, remove profiles; choose Use for API; inspect browser; reset local pauses; select optional limit failover</td></tr>
+<tr><td>API</td><td>Set port and request timeout; enable compatibility/tool translation; generate/revoke local keys; start/stop endpoint</td></tr>
+<tr><td>Models</td><td>Refresh authenticated model discovery and select the default. Availability does not establish remaining quota</td></tr>
+<tr><td>App</td><td>Dark/light theme, endpoint resume, Pi setup, updater status</td></tr>
+<tr><td>Logs</td><td>Inspect redacted events and run local endpoint test; identify session, model, transport or tool validation errors</td></tr>
+<tr><td>Sessions</td><td>View mapped project, client session, account, thread and turn counts; verify continuation and isolation</td></tr>
+</tbody></table></div>
+<p><strong>Save all settings</strong> commits pending controls. Dark mode is the default. Browser visibility is saved; sign-in opens it when necessary. Tray controls provide access while the window is hidden. Use the tray Exit action to fully stop the process; Stop endpoint disables automatic endpoint resume until it is started again. Resume endpoint on startup resumes a previously successful endpoint after account verification, rather than making first launch immediately ready.</p>
+<h3>API quick start</h3>
+<div class="code"><button class="copy" type="button">Copy</button><pre><code>import os
+from uuid import uuid4
+from openai import OpenAI
+
+# Persist this identifier with your chat, and reuse it for tool results/resume.
+session_id = str(uuid4())
+client = OpenAI(
+    base_url=&quot;http://127.0.0.1:8082/v1&quot;,
+    api_key=os.environ[&quot;LOCAL_PERPLEXITY_KEY&quot;],
+    max_retries=0,
+    timeout=180,
+    default_headers={
+        &quot;X-Perplexity-Session-Id&quot;: session_id,
+        &quot;X-Perplexity-Project-Id&quot;: &quot;example-project&quot;,
+        &quot;X-Perplexity-Project-Name&quot;: &quot;Example%20project&quot;,
+    },
+)
+reply = client.chat.completions.create(
+    model=&quot;perplexity-web&quot;,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Reply with exactly OK.&quot;}],
+)
+print(reply.choices[0].message.content)</code></pre></div>
+<div class="table"><table><tbody>
+<tr><td>Endpoint</td><td>Meaning</td></tr>
+<tr><td>GET /health</td><td>Process/endpoint status, separate from provider readiness</td></tr>
+<tr><td>GET /v1/models</td><td>Account-supported model choices; perplexity-web is configured default; perplexity-auto is website automatic</td></tr>
+<tr><td>GET /v1/bridge/sessions</td><td>Authenticated client&#x27;s session summaries; no continuation secrets or reply contents</td></tr>
+<tr><td>POST /v1/chat/completions</td><td>OpenAI-shaped text/history/function tools; optional buffered SSE</td></tr>
+<tr><td>POST /v1/messages</td><td>Experimental Messages-shaped compatibility</td></tr>
+</tbody></table></div>
+<p>Use Authorization Bearer or x-api-key for the locally generated key. Revoke a key to stop that client. No-key mode remains loopback-only, but any local process able to reach the port can then request generation. Host/Origin checks and body limits still apply. Keep keys outside source control.</p>
+<h3>Sessions, models and failover</h3>
+<p>Every generation requires a stable harness session ID. User turns and tool-result exchanges share one mapped native thread. A new harness chat gets a different mapping. Restart/resume retains the original mapping. Session identity includes key and project: changing those changes the mapping scope. Each mapped session stays pinned to its original account. Viewing another account is independent of routing.</p>
+<p>Optional failover tries eligible accounts once for explicit rate/usage limits when establishing a new conversation, within the original timeout. It does not substitute unavailable models, move existing threads, or retry ambiguous generation outcomes. Provider reset information is used where available; other timers are local retry delays.</p>
+<p>Large contexts are transferred through native messages within a 39,000-character budget; setup fragments and execution stay in one thread and consume additional allowance. Unchanged context is reused; follow-ups send incremental history. Echo checks detect website input truncation. Native system-message priority and unlimited total context are unavailable.</p>
+<h3>Tool reliability and compatibility</h3>
+<p>The model returns a structured envelope which the bridge translates into OpenAI tool calls. The harness executes them locally and supplies results. Website artifacts do not prove local file creation. Prompt compliance can fail; inspect tool events and actual files before accepting a completion claim.</p>
+<p>Pending recovery code can extract a single complete nonce-matching JSON envelope from surrounding prose and validate names, arguments, duplicate keys and supported schema constraints. For a completed invalid response, it permits one correction in the same mapped conversation and original timeout. This consumes an additional native request. It does not automatically rerun an ambiguous transport outcome or invent argument repairs. These changes have synthetic coverage; live recovery is not yet verified.</p>
+<p>SSE is buffered until generation and validation finish. Token usage is null. max_tokens-style budgets are approximate prompt guidance, not enforceable output limits; begin with modest tasks and enough time for context transfer. Sampling parameters cannot be enforced. Unsupported explicit reasoning controls are rejected; choose a discovered thinking-model ID instead. Citation links are retained for ordinary prose and excluded from structured tool payloads. Web search follows the website behavior and is not guaranteed disabled.</p>
+<p>Images, file uploads, audio, Responses API, native tool execution, strict structured-output guarantees, and dedicated Research/Labs are outside the supported first-release workflow.</p>
+<h3>Troubleshooting</h3>
+<div class="table"><table><tbody>
+<tr><td>Symptom</td><td>Next action</td></tr>
+<tr><td>session_id_required</td><td>Install/reload the harness helper; verify every call carries the same session identity</td></tr>
+<tr><td>New website conversation after each turn</td><td>Check the ID is persistent and that project/key are not changing; inspect thread headers and Sessions</td></tr>
+<tr><td>model_not_found</td><td>Refresh the verified account&#x27;s models and harness catalogue; select an exact discovered ID or perplexity-web</td></tr>
+<tr><td>Claimed file exists but no local file</td><td>Inspect caller tool events; enable harness write/edit/read/shell and tool translation; website artifacts are separate</td></tr>
+<tr><td>invalid_tool_response</td><td>Record model/version and sanitized error; smaller task/payload; check pending recovery status; do not assume local permissions caused it</td></tr>
+<tr><td>Verification or expired session</td><td>Open that profile, complete verification yourself, then check account again</td></tr>
+<tr><td>Pending/uncertain upstream request</td><td>Inspect the existing browser/thread before recovery; do not create replacement IDs to hide an ambiguous outcome</td></tr>
+<tr><td>No SSE for a while</td><td>Buffered generation is expected; align harness and app timeouts, allowing for setup fragments</td></tr>
+<tr><td>Rate/usage pause</td><td>Honor provider information; local Reset pause does not replenish allowance</td></tr>
+<tr><td>Update source not configured</td><td>Expected: source push does not configure a trusted updater feed</td></tr>
+</tbody></table></div>
+<h3>Data, backup and removal</h3>
+<p>Application data lives under <code>%LOCALAPPDATA%\LocalPerplexityBridge</code>, even for portable execution. It includes settings/key hashes, isolated WebView2 profiles, profile metadata, logs and DPAPI-encrypted conversation continuation data and recent cached replies. Metrics record lengths rather than prompts. Never upload the data folder, browser profiles, raw transcripts or credentials to GitHub. Windows DPAPI data is tied to the user context; copying files is not a portable credential export.</p>
+<p>Back up data locally with the app closed before upgrades. Preserve it when uninstalling if you need to resume sessions. Removing an account invalidates its local session access and leaves routing tombstones; it does not delete website conversations. Original Claude app files remain separate, and port 8082 permits coexistence with its endpoint when ports do not conflict.</p>
+<h3>Build, test and package</h3>
+<p>Prerequisites: Windows x64, .NET 8 SDK, Node.js for JavaScript tests; WebView2 Runtime for desktop execution. Python 3 is only needed to regenerate this HTML guide.</p>
+<div class="code"><button class="copy" type="button">Copy</button><pre><code>dotnet build PerplexityLocalBridge.csproj -c Release
+dotnet run --project tests/Bridge.Tests.csproj -c Release
+dotnet run --project tests/Updates/Updates.Tests.csproj -c Release
+dotnet run --project tests/Browser/Browser.Tests.csproj -c Release
+dotnet run --project tests/Appearance/Appearance.Tests.csproj -c Release
+node tests/stream.test.cjs
+node tests/web-transport.test.cjs
+node tests/models.test.cjs
+node tests/pi-extension.test.mjs
+node tests/opencode-extension.test.mjs
+python scripts/Build-Guide.py
+.\scripts\Build-Release.ps1</code></pre></div>
+<p>The release script emits a self-contained x64 ZIP, installer and SHA256SUMS.txt under artifacts/release/version. Compare hashes with Get-FileHash before distribution. A fresh source build with pending recovery needs a new version and live verification before it replaces the installed baseline. GitHub Actions builds/tests source without an account and uploads workflow artifacts; it does not publish a GitHub release or configure app updates.</p>
+<p>The original MIT copyright remains in LICENSE. This project is independent of Perplexity, Anthropic, OpenAI and the supported harness projects.</p></section><section id="accounts"><div class="eyebrow">02 / Account setup</div><h2>Configure every Perplexity account</h2>
+<p>Repeat this checklist for each distinct account. Recommended baseline: a dedicated bridge account. Account-wide personalization changes also affect ordinary website use.</p>
+<ul>
+<li>In <strong>Accounts</strong>, choose <strong>Add account</strong>, assign a useful local label, and open <strong>Sign in / open Perplexity</strong>. Complete login and verification yourself in that profile&#x27;s embedded browser. A login in Codex, Chrome, or another profile does not sign this profile in.</li>
+<li>Verify the intended email and subscription in the website account menu. Never infer remaining allowance from a Pro badge or model list.</li>
+<li>Open website <strong>Settings → Personalization</strong>. Set response length and headers/lists to <strong>Default</strong>. Paste the conditional instructions below. Occupation and company fields can remain empty; they are unnecessary for the bridge.</li>
+<li>For dedicated bridge accounts, turn <strong>Use search history</strong> and <strong>Notes</strong> off under <strong>Memory</strong>. Do not delete existing conversations or stored memories as part of setup.</li>
+<li>Disable unrelated custom skills, such as Content creation, for this baseline. Upload <a href="integrations/perplexity/SKILL.md">the bridge skill</a> through <strong>Plugins → Add custom → Upload plugin or skill</strong>, or the older <strong>Customize → Skills → Create skill → Upload skill</strong> interface. Confirm its name and description on Installed.</li>
+<li>Back in the app, click <strong>Check selected account</strong>, then <strong>Models → Refresh models from Perplexity</strong>. Choose only a discovered model, or the automatic option if manual selection is unavailable.</li>
+<li>Enable <strong>Include in API routing</strong> and choose <strong>Use for API</strong> when this should be the default account. Viewing another profile does not change API routing. Save all settings.</li>
+<li>Run the local endpoint test, then a harmless harness write/read/edit cycle. Verify real local tool events and disk contents. Record app version, explicit model ID, account tier, date, and results.</li>
+</ul>
+<h3>Conditional custom instructions</h3>
+<blockquote>When a request explicitly identifies Local Perplexity Bridge and supplies a bridge_protocol response contract, follow that contract exactly. Return only the requested JSON object, with no Markdown fences or additional commentary. Use the current request&#x27;s protocol identifier and only its declared caller tools.</blockquote>
+<blockquote></blockquote>
+<blockquote>The caller&#x27;s tools execute on my local computer. Perplexity website artifacts and Computer tools are a separate environment. Request local file operations, commands, and application launches through the declared caller tools. Never substitute a website artifact for a local file.</blockquote>
+<blockquote></blockquote>
+<blockquote>A requested tool call is not a completed action. Claim success only after receiving a successful caller tool result. Do not invent results or claim local tools are unavailable merely because Perplexity cannot directly access Windows.</blockquote>
+<blockquote></blockquote>
+<blockquote>For these bridge requests, use the supplied conversation and current instructions for project state, rather than memories or other conversations. Acknowledge context-transfer fragments exactly as instructed and wait for the execution request. For all other conversations, respond normally.</blockquote>
+<h3>Skills and connectors: verified boundaries</h3>
+<p>Skills are documented for <strong>Perplexity Computer</strong>, with task-based activation. Uploading this skill does not prove activation in the bridge&#x27;s Search-mode transport, enforce JSON syntax, or grant local permissions. The latest successful tests were performed after the user reported applying this baseline; they do not isolate which setting helped.</p>
+<p>Custom remote MCP connectors require HTTPS and support authentication. A cloud service cannot reach this PC&#x27;s <code>127.0.0.1</code> endpoint. No remote connector or public tool relay is implemented by this app. Do not enter the local API URL as a remote connector expecting local shell access.</p>
+<p>Sources checked 28 October 2026: <a href="https://www.perplexity.ai/help-center/en/articles/13914413-how-to-use-computer-skills">Computer skills</a>, <a href="https://www.perplexity.ai/help-center/en/articles/13915507-adding-custom-remote-connectors">remote connectors</a>.</p>
+<h3>Multiple accounts</h3>
+<p>Keep one isolated browser profile per account and repeat the baseline in each account. Reordering changes new-request candidate order. Failover applies to recognized usage/rate limits for new conversations; existing sessions remain pinned to their original account. A local retry delay is not a provider quota-reset estimate. Reset pause clears the local timer only. Removing a profile invalidates access to its mapped sessions; it does not migrate them or delete website conversations. Free and Max generation remain unverified separately.</p></section><section id="harnesses"><div class="eyebrow">03 / Harness development</div><h2>Build a harness integration</h2>
+<p>The extension&#x27;s job is stable identity and provider configuration. The harness retains its tools, execution permissions, approvals, and tool-result loop. A skill alone cannot provide reliable session identity.</p>
+<h3>Wire contract</h3>
+<p>Send these headers on <strong>every generation request</strong>, including tool-result continuations, retries, and resumed sessions:</p>
+<div class="table"><table><tbody>
+<tr><td>Header</td><td>Value</td></tr>
+<tr><td><code>Authorization</code></td><td><code>Bearer &lt;local bridge key&gt;</code></td></tr>
+<tr><td><code>X-Perplexity-Session-Id</code></td><td>Persistent unique harness conversation ID</td></tr>
+<tr><td><code>X-Perplexity-Project-Id</code></td><td>Stable opaque project ID, e.g. SHA-256 of canonical workspace path</td></tr>
+<tr><td><code>X-Perplexity-Project-Name</code></td><td>URI-encoded display label</td></tr>
+</tbody></table></div>
+<p>Session mappings are scoped to local key + project + session. Persist the session ID with the harness conversation. Generate a new ID for new chats and forks. Reuse it when resuming. Never derive identity from prompt text, generate it per HTTP call, or use a single provider-wide ID. Rotating the local key changes the mapping scope.</p>
+<p>Equivalent body metadata fields are <code>session_id</code>, <code>project_id</code>, <code>project_name</code>. Explicit headers take precedence. Clients limited to base URLs can use <code>/v1/sessions/&lt;unique-session-id&gt;</code>; change that URL for every new chat. Conflicting scoped URL/header IDs are rejected. Missing identity returns <code>session_id_required</code>.</p>
+<h3>Minimal reusable adapter</h3>
+<div class="code"><button class="copy" type="button">Copy</button><pre><code>import { createHash } from &quot;node:crypto&quot;;
+import { resolve, basename } from &quot;node:path&quot;;
+
+export function bridgeHeaders({ baseURL, apiKey, sessionId, workspace }) {
+  const url = new URL(baseURL);
+  if (url.protocol !== &quot;http:&quot; || ![&quot;127.0.0.1&quot;, &quot;localhost&quot;, &quot;[::1]&quot;].includes(url.hostname))
+    throw new Error(&quot;Expected local bridge URL&quot;);
+  if (!sessionId) throw new Error(&quot;Persist a conversation ID before generation&quot;);
+  const cwd = resolve(workspace);
+  const identity = process.platform === &quot;win32&quot; ? cwd.toLowerCase() : cwd;
+  return {
+    Authorization: `Bearer ${apiKey}`,
+    &quot;X-Perplexity-Session-Id&quot;: sessionId,
+    &quot;X-Perplexity-Project-Id&quot;: createHash(&quot;sha256&quot;).update(identity).digest(&quot;hex&quot;),
+    &quot;X-Perplexity-Project-Name&quot;: encodeURIComponent([...basename(cwd)].slice(0, 48).join(&quot;&quot;))
+  };
+}</code></pre></div>
+<p>Hook this into the harness&#x27;s request builder, restricted to its configured local Perplexity provider. Resolve workspace identity consistently across restarts; symlinks, path case, or relocating a project can change it. Do not send bridge credentials to arbitrary remote URLs. Fetch <code>/v1/models</code> with the local key and preserve IDs exactly. <code>perplexity-web</code> selects the app default; <code>perplexity-auto</code> requests website automatic selection. Do not hardcode paid models for Free profiles.</p>
+<h3>Tool loop</h3>
+<ul>
+<li>Send standard OpenAI messages and declared function tools, including valid JSON schemas. Enable Translate harness tool calls in the app.</li>
+<li>Read returned <code>tool_calls</code>; arguments are JSON strings. Execute them using the harness&#x27;s existing tool dispatcher and permission checks.</li>
+<li>Append the assistant message containing those calls, then matching <code>role: tool</code> messages with each <code>tool_call_id</code>. Send the continuation with the <strong>same session/project headers</strong>.</li>
+<li>Continue until the assistant produces a final response. Confirm file changes and command outcomes from actual tool results.</li>
+</ul>
+<p>The bridge supplies its internal protocol nonce and validates the returned envelope. Do not implement your own fixed nonce or pre-wrap normal SDK messages. Streaming is buffered: a long pause before SSE is expected. Usage is <code>null</code>. Select a discovered thinking model by ID if desired; omit explicit reasoning controls. Disable automatic retries for ambiguous generation failures. Honor cancellation and surface errors instead of creating replacement conversations.</p>
+<h3>Pi reference</h3>
+<p>Source: <a href="integrations/pi/perplexity-bridge.mjs">perplexity-bridge.mjs</a>. The app&#x27;s <strong>App → Set up Pi session tracking</strong> installs it as <code>~/.pi/agent/extensions/perplexity-bridge.ts</code> and configures the provider. Restart Pi or run <code>/reload</code>.</p>
+<p>Developer install: <code>node scripts/Install-PiIntegration.mjs</code> from the repository root. This requires an existing <code>perplexity-2-api</code> provider in <code>~/.pi/agent/models.json</code>; it installs the helper and refreshes models using the existing local key. The app setup is the easier initial configuration route.</p>
+<p>The helper uses <code>before_provider_headers</code>, metadata fallback in <code>before_provider_request</code>, and <code>after_provider_response</code> for thread status. <code>/perplexity-thread</code> shows the linked thread; <code>/perplexity-models</code> refreshes choices. It uses Pi&#x27;s session manager ID and workspace hash. Hook availability must be checked for the target Pi build. Latest live checks used Pi CLI 1.4.0; isolated tests disable unrelated Pi extensions, skills and MCP.</p>
+<h3>OpenCode reference</h3>
+<p>Copy <a href="integrations/opencode/perplexity-sessions.mjs">perplexity-sessions.mjs</a> to <code>~/.config/opencode/plugins/perplexity-sessions.ts</code>, preserving its named export. Restart OpenCode. Configure provider ID <code>perplexity-2-api</code>, npm provider <code>@ai-sdk/openai-compatible</code>, and <code>options.baseURL</code> as <code>http://127.0.0.1:8082/v1</code>; store a generated local key through the harness&#x27;s authentication flow. Populate model IDs from the bridge.</p>
+<p>The plugin uses <code>chat.headers</code>, <code>input.sessionID</code>, <code>input.model.providerID</code>, and the project directory. Test hook compatibility against the installed OpenCode version. Hook fixtures and the compatible provider SDK passed; the latest suite did not run a full live OpenCode UI workflow.</p>
+<h3>Acceptance tests for every new harness</h3>
+<ul>
+<li>Same chat: user → tool call → tool result → follow-up retains one <code>X-Perplexity-Thread-Id</code>.</li>
+<li>Restart/resume retains that thread; new chat and fork get distinct threads.</li>
+<li>Concurrent chats and two workspaces remain isolated. Cancellation does not silently start a replacement request.</li>
+<li>Missing identity and unavailable model fail clearly; no automatic model substitution.</li>
+<li>Real write/read/edit/shell actions succeed locally; missing-file errors remain errors.</li>
+<li>Model refresh uses authenticated discovery; revoked local keys are rejected.</li>
+<li>Inspect <code>/v1/bridge/sessions</code> and actual local files. A plausible assistant claim alone is not a passing test.</li>
+</ul>
+<p>Use the existing Pi/OpenCode hook tests and live SDK scripts as references. Record model ID, tier, app version, harness version, prompt sizes, settings baseline, time, and whether the check was synthetic or live. Keep raw account/thread/credential artifacts out of commits.</p></section><section id="tests"><div class="eyebrow">04 / Test evidence</div><h2>Verification — 28 October 2026</h2>
+<h3>Exact model and environment</h3>
+<p><strong>Every live check in the latest expanded run used <code>perplexity-claude55sonnetthinking</code> (Claude Sonnet Thinking), on the connected account reporting Pro, against installed bridge v0.3.4.</strong> This is not a comparison across models. Tests selected this ID explicitly; they did not rely on the configured-default alias.</p>
+<p>Pi CLI reported version 1.4.0. The account baseline was reported by the user: conditional custom instructions, uploaded bridge skill, Default response length, search-history memory and Notes disabled, unrelated Content creation skill disabled. We did not verify skill activation or isolate causality between these changes and successful responses.</p>
+<h3>Live results</h3>
+<div class="table"><table><tbody>
+<tr><td>Suite / command</td><td>Outcome</td></tr>
+<tr><td><code>node tests/live-pi-rpc.mjs --file-cycle --model perplexity-claude55sonnetthinking</code></td><td>PASS: actual write/read/edit tools, independently verified local contents, real missing-file tool error, successful subsequent <code>node --version</code>, same upstream thread</td></tr>
+<tr><td><code>node tests/live-pi-rpc.mjs --with-tool --long-context --model perplexity-claude55sonnetthinking</code></td><td>PASS: real read/result loop, appended long-context reference retrieval, same-thread continuation and process resume, distinct thread for new session</td></tr>
+<tr><td><code>node tests/live-sdk.mjs --pi-credentials --model perplexity-claude55sonnetthinking</code></td><td>PASS: OpenAI text, history, buffered SSE, OpenCode-compatible SDK streamed tool call and result/final answer</td></tr>
+</tbody></table></div>
+<p>Raw local records were written around 01:15–01:16 UTC (03:15–03:16 Europe/Athens). They remain in ignored <code>artifacts/</code>; public documentation omits thread IDs, personal paths and account identifiers. Repeated runs overwrite the corresponding local latest-result files.</p>
+<h3>Automated source checks</h3>
+<ul>
+<li>C# suite: 152 assertions passed, including API authentication, profile routing, encrypted conversation persistence, bounded context and response recovery.</li>
+<li>Stream parser: 255 split positions passed, plus Unicode, incremental/replacement answers, errors, completion and truncation checks.</li>
+<li>Transport/model/Pi/OpenCode fixtures passed: request echo, isolation, unavailable models, verification/limits, tier discovery, stable session and project metadata.</li>
+</ul>
+<p>The response-recovery source changes are <strong>not installed in the v0.3.4 binary used above</strong>. Their synthetic coverage does not establish live recovery. This repository includes that pending source; a new build must be labeled and tested before treating it as a verified replacement for the installed binary.</p>
+<h3>Historical model evidence</h3>
+<p>Earlier v0.3.0 long-context tests used <code>perplexity-gpt6_1_sol_thinking</code>: 71,601 system characters plus 25 tools, fragmented transfer, echo-tool round trip, and incremental follow-up passed. Other GPT runs showed inconsistent caller-tool behavior. Do not generalize the latest Claude successes to GPT, automatic selection, or every available model.</p>
+<h3>Remaining gaps</h3>
+<p>Free and Max tiers; full OpenCode application workflow; long soak sessions; large code/quote-heavy tool arguments; live multi-account quota failover; live malformed-response recovery; skill activation in Search; native MCP connector transport; all discovered models; Windows 10/ARM64. No claims of unlimited allowance, provider support, or native structured-tool guarantees are made.</p>
+<h3>Reproducing</h3>
+<p>Live Pi scripts require the installed Pi CLI, helper and a configured local provider. They use isolated test directories and remove their temporary key config in <code>finally</code>. They consume web-account allowance. Live SDK tests additionally require optional dependencies in <code>artifacts/sdk</code>: <code>openai</code>, <code>ai</code>, <code>@ai-sdk/openai-compatible</code>, <code>jsonc-parser</code>; the script currently also reads an existing OpenCode configuration. Do not fabricate or commit personal provider configuration to run CI. Automated CI uses synthetic backends and requires no Perplexity login.</p></section><footer>Independent project. Original MIT attribution retained. <a href="LICENSE">License</a> · <a href="README.md">Markdown README</a> · <a href="TESTING.md">Historical testing</a></footer></main><script>
+const root=document.documentElement,theme=document.getElementById('theme');let stored;try{stored=localStorage.getItem('bridge-guide-theme')}catch{}if(stored==='light')root.dataset.theme='light';function label(){theme.textContent=root.dataset.theme==='dark'?'Switch to light':'Switch to dark'}label();theme.onclick=()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';try{localStorage.setItem('bridge-guide-theme',root.dataset.theme)}catch{}label()};document.querySelectorAll('.copy').forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(b.parentElement.querySelector('code').textContent);b.textContent='Copied'}catch{b.textContent='Select text to copy'}setTimeout(()=>b.textContent='Copy',1800)});
+</script></body></html>

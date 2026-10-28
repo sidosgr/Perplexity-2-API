@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+ <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+ <ItemGroup><PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0"/><Compile Include="..\ConversationStore.cs" Link="ConversationStore.cs"/><Compile Include="..\PromptPlanner.cs" Link="PromptPlanner.cs"/></ItemGroup>
+ <ItemGroup><Compile Remove="Browser\**\*.cs"/></ItemGroup>
+ <ItemGroup><Compile Include="..\ProfileStore.cs" Link="ProfileStore.cs"/></ItemGroup>
+ <ItemGroup><Compile Remove="Appearance\**\*.cs"/><Compile Include="..\SettingsCommit.cs" Link="SettingsCommit.cs"/></ItemGroup>
+ <ItemGroup><Compile Remove="Updates\**\*.cs"/><FrameworkReference Include="Microsoft.AspNetCore.App"/><Compile Include="..\BridgeState.cs" Link="BridgeState.cs"/><Compile Include="..\LocalServer.cs" Link="LocalServer.cs"/><Compile Include="..\ChatProtocol.cs" Link="ChatProtocol.cs"/></ItemGroup>
+</Project>

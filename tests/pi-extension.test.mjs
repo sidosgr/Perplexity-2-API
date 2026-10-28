@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import extension from '../integrations/pi/perplexity-bridge.mjs';
+const events={},commands={},entries=[],status=[];
+const pi={on:(name,handler)=>{events[name]=handler},registerCommand:(name,cmd)=>{commands[name]=cmd},appendEntry:(type,data)=>entries.push({type,data})};
+extension(pi);
+let session='session-one';
+const ctx={cwd:'C:/Project',model:{provider:'perplexity-2-api',baseUrl:'http://127.0.0.1:8082/v1'},sessionManager:{getCwd:()=>'/sample/project',getSessionId:()=>session,getEntries:()=>[]},ui:{setStatus:(...x)=>status.push(x),notify:()=>{}}};
+const first={headers:{}};events.before_provider_headers(first,ctx);const again={headers:{}};events.before_provider_headers(again,ctx);
+assert.deepEqual(first,again);assert.equal(first.headers['X-Perplexity-Session-Id'],'session-one');
+session='session-two';const fresh={headers:{}};events.before_provider_headers(fresh,ctx);assert.notEqual(first.headers['X-Perplexity-Session-Id'],fresh.headers['X-Perplexity-Session-Id']);
+const payload=events.before_provider_request({payload:{messages:[]}},ctx);assert.equal(payload.metadata.session_id,'session-two');assert.equal(payload.metadata.project_id,first.headers['X-Perplexity-Project-Id']);
+events.after_provider_response({headers:{'x-perplexity-thread-id':'thread-abc'}},ctx);events.after_provider_response({headers:{'x-perplexity-thread-id':'thread-abc'}},ctx);assert.equal(entries.length,1);assert.equal(status.at(-1)[1],'Perplexity · thread-a');
+ctx.model={provider:'other',baseUrl:'http://127.0.0.1:8082/v1'};const other={headers:{}};events.before_provider_headers(other,ctx);assert.deepEqual(other.headers,{});
+ctx.model={provider:'perplexity-2-api',baseUrl:'https://external.example/v1'};events.before_provider_headers(other,ctx);assert.deepEqual(other.headers,{});
+assert(commands['perplexity-thread']&&commands['perplexity-models']);console.log('PASS: Pi stable sessions, new-session isolation, project identities, metadata fallback, thread status and local-provider restriction');

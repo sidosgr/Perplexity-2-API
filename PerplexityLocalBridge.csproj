@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>Assets\Bridge.ico</ApplicationIcon>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>PerplexityLocalBridge</AssemblyName>
+    <Version>0.3.4</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+    <Resource Include="Assets\Bridge.ico" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <EmbeddedResource Include="WebBridge.js" />
+    <EmbeddedResource Include="integrations\pi\perplexity-bridge.mjs" LogicalName="PerplexityLocalBridge.PiBridge.mjs" />
+    <None Update="integrations\pi\perplexity-bridge.mjs" CopyToPublishDirectory="PreserveNewest" />
+    <Compile Remove="tests\**\*.cs" />
+    <Compile Remove="tools\**\*.cs" />
+    <Page Remove="tools\**\*.xaml" />
+    <ApplicationDefinition Remove="tools\**\*.xaml" />
+    <None Update="README.md" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="README.html" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="docs\**\*" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="integrations\perplexity\SKILL.md" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="LICENSE" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="TESTING.md" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
+

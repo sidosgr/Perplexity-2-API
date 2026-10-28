@@ -1,0 +1,36 @@
+name: Windows build and tests
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: dotnet build PerplexityLocalBridge.csproj -c Release
+      - run: dotnet run --project tests/Bridge.Tests.csproj -c Release
+      - run: dotnet run --project tests/Updates/Updates.Tests.csproj -c Release
+      - run: dotnet run --project tests/Appearance/Appearance.Tests.csproj -c Release
+      - run: node tests/stream.test.cjs
+      - run: node tests/web-transport.test.cjs
+      - run: node tests/models.test.cjs
+      - run: node tests/pi-extension.test.mjs
+      - shell: pwsh
+        run: ./scripts/Build-Release.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LocalPerplexityBridge-Windows-x64
+          path: |
+            artifacts/release/*/LocalPerplexityBridge-Windows-x64.zip
+            artifacts/release/*/SHA256SUMS.txt
+            artifacts/release/*/LocalPerplexityBridge-Setup-*-x64.exe

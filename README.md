@@ -61,6 +61,8 @@ For development, `node scripts/Install-PiIntegration.mjs` installs the same help
 
 ## DeepSeek Harness
 
+Prebuilt helper ZIPs can be generated for Pi, OpenCode and DeepSeek Harness, with a combined download and SHA-256 checksums. See [Helper packages](docs/HELPER-PACKAGES.md) for installer behavior and build instructions.
+
 Install the [DeepSeek Harness provider plugin](integrations/deepseek-harness/README.md) through its Plugin Manager. The bundle supplies authenticated model discovery and persistent session identity directly through the host LLM adapter API. Source is in `integrations/deepseek-harness`; no package-registry publication is required. The plugin README records live Claude Sonnet Thinking runtime/tool-loop evidence and full-application verification limits.
 
 ## OpenCode setup

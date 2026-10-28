@@ -43,7 +43,7 @@ def render(text, prefix):
     if listing:out.append('</ul>')
     result='\n'.join(out)
     # Markdown sections originally in docs/ use paths relative to that folder.
-    if prefix: result=result.replace('href="../','href="').replace('href="ACCOUNT-', 'href="docs/ACCOUNT-')
+    if prefix: result=result.replace('href="../','href="').replace('href="ACCOUNT-', 'href="docs/ACCOUNT-').replace('href="HELPER-PACKAGES.md"','href="docs/HELPER-PACKAGES.md"')
     return result
 
 sections=[('overview','Start here','docs/APP-GUIDE.md'),('accounts','Account setup','docs/ACCOUNT-SETUP.md'),('harnesses','Harness development','docs/HARNESS-DEVELOPMENT.md'),('tests','Test evidence','docs/TEST-REPORT-2026-10-28.md')]

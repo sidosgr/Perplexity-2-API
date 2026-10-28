@@ -106,6 +106,8 @@ Back up data locally with the app closed before upgrades. Preserve it when unins
 
 ## Build, test and package
 
+Separate installable Pi, OpenCode and DeepSeek Harness helper packages are described in [Helper packages](HELPER-PACKAGES.md). They include manual setup instructions; no configured AI is needed for installation. The helpers require the desktop bridge to be running.
+
 Prerequisites: Windows x64, .NET 8 SDK, Node.js for JavaScript tests; WebView2 Runtime for desktop execution. Python 3 is only needed to regenerate this HTML guide.
 
 ```powershell

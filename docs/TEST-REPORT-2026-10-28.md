@@ -30,6 +30,10 @@ Earlier v0.3.0 long-context tests used `perplexity-gpt6_1_sol_thinking`: 71,601 
 
 ## Remaining gaps
 
+### DeepSeek Harness plugin follow-up
+
+Plugin 0.1.0 was checked against upstream source revision 22ddee3792402c3e70ec5f86a63c3e3e895a2f60 and the published dsh-llm 0.0.1-rc.1 runtime. Transport fixtures, real Cordis activation/LLM registration, model resolution, and prepared streaming passed. Live checks used **perplexity-claude55sonnetthinking**, Pro, installed bridge v0.3.4: text and a tool-call/local QA write/read/result/final cycle passed. Same-session response thread headers were checked. The test supplies one harmless QA tool dispatcher; full Harness UI installation and built-in tools remain unverified. No local DeepSeek API key or separately billed fallback was used.
+
 Free and Max tiers; full OpenCode application workflow; long soak sessions; large code/quote-heavy tool arguments; live multi-account quota failover; live malformed-response recovery; skill activation in Search; native MCP connector transport; all discovered models; Windows 10/ARM64. No claims of unlimited allowance, provider support, or native structured-tool guarantees are made.
 
 ## Reproducing

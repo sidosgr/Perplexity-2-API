@@ -59,7 +59,11 @@ The first request from a Pi session after upgrading creates its initial mapping.
 
 For development, `node scripts/Install-PiIntegration.mjs` installs the same helper and refreshes an existing provider using its current local key.
 
-## OpenCode
+## DeepSeek Harness
+
+Install the [DeepSeek Harness provider plugin](integrations/deepseek-harness/README.md) through its Plugin Manager. The bundle supplies authenticated model discovery and persistent session identity directly through the host LLM adapter API. Source is in `integrations/deepseek-harness`; no package-registry publication is required. The plugin README records live Claude Sonnet Thinking runtime/tool-loop evidence and full-application verification limits.
+
+## OpenCode setup
 
 Configure an OpenAI-compatible custom provider:
 
@@ -172,4 +176,5 @@ Based on the current Local Claude Bridge source supplied by the user. Original M
 Protocol references: [Perplexity official SDK](https://github.com/perplexityai/perplexity-py), [edusu/perplexity-cli](https://github.com/edusu/perplexity-cli), and [ccproxy web adapter](https://github.com/starbaser/ccproxy/blob/dev/src/ccproxy/lightllm/pplx.py). Desktop runtime: [Microsoft WebView2](https://learn.microsoft.com/en-us/microsoft-edge/webview2/).
 
 Independent experimental project, not affiliated with Perplexity, Anthropic, OpenAI, or OpenCode. A working technical test does not establish provider support or authorization.
+
 

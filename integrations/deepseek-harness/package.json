@@ -1,0 +1,11 @@
+{
+  "name": "dsh-perplexity-bridge",
+  "version": "0.1.0",
+  "description": "Local Perplexity Bridge provider with persistent DeepSeek Harness session routing",
+  "type": "module",
+  "license": "MIT",
+  "exports": {".": "./index.js", "./locale/*.json": "./locale/*.json", "./icon": "./icon.svg"},
+  "files": ["index.js", "transport.js", "cordis.patch.yml", "locale", "icon.svg", "README.md"],
+  "peerDependencies": {"@deepseek-ai/dsh-llm": ">=0.0.1-rc.1"},
+  "dsh": {"bundle": {"patch": "./cordis.patch.yml"}}
+}

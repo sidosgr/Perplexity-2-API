@@ -64,7 +64,11 @@ Copy [perplexity-sessions.mjs](../integrations/opencode/perplexity-sessions.mjs)
 
 The plugin uses `chat.headers`, `input.sessionID`, `input.model.providerID`, and the project directory. Test hook compatibility against the installed OpenCode version. Hook fixtures and the compatible provider SDK passed; the latest suite did not run a full live OpenCode UI workflow.
 
-## Acceptance tests for every new harness
+## DeepSeek Harness plugin
+
+The [DeepSeek provider bundle](../integrations/deepseek-harness/README.md) registers a dedicated `perplexity-bridge` adapter with the host LLM service. It includes authenticated model discovery, durable session headers, cancellation, disabled automatic retries, and translation for published rc.1 and current-source tool-result formats. See its README for Plugin Manager installation, environment configuration, auxiliary-call limitations and model-specific live evidence. Unlike the Pi/OpenCode helpers, this is a complete provider adapter.
+
+## Acceptance checklist
 
 - Same chat: user → tool call → tool result → follow-up retains one `X-Perplexity-Thread-Id`.
 - Restart/resume retains that thread; new chat and fork get distinct threads.
